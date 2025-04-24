@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yalla Shooot ❄️</title>
+  <style>
+    :root {
+      --main-bg: #e0f7fa;
+      --card-bg: #ffffff;
+      --text-color: #000000;
+      --button-bg: #00bcd4;
+      --button-hover: #0097a7;
+    }
+
+    body.dark {
+      --main-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #f0f0f0;
+      --button-bg: #3b3b3b;
+      --button-hover: #555;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--main-bg);
+      color: var(--text-color);
+      transition: background 0.5s, color 0.5s;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--button-bg);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 26px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .toggle-dark {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: white;
+      color: #000;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .matches {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .match {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease-in-out;
+      flex-wrap: wrap;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 35%;
+      font-size: 14px;
+      flex: 1;
+    }
+
+    .team img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+
+    .middle {
+      text-align: center;
+      max-width: 30%;
+      flex: 1;
+    }
+
+    .watch-btn {
+      margin-top: 4px;
+      background-color: var(--button-bg);
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .watch-btn:hover {
+      background-color: var(--button-hover);
+    }
+
+    .note {
+      font-size: 10px;
+      color: gray;
+      margin-top: 4px;
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      font-size: 18px;
+      color: white;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100vh); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  Yalla Shooot ❄️
+  <button class="toggle-dark" onclick="toggleDarkMode()">Dark Mode</button>
+</header>
+
+<section class="matches" id="match-container"></section>
+
+<script>
+  const matches = [
+    {
+      home: { name: "Arsenal", logo: "https://crests.football-data.org/57.png" },
+      away: { name: "Brighton", logo: "https://crests.football-data.org/397.png" },
+      links: [
+        "https://www.facebook.com/share/16Dk4WZuQT/?mibextid=wwXIfr",
+        "https://www.facebook.com/share/1ACaHGeCkk/?mibextid=wwXIfr"
+      ]
+    },
+    {
+      home: { name: "Manchester United", logo: "https://crests.football-data.org/66.png" },
+      away: { name: "Everton", logo: "https://crests.football-data.org/62.png" },
+      links: [
+        "https://www.facebook.com/share/16Dk4WZuQT/?mibextid=wwXIfr",
+        "https://www.facebook.com/share/1ACaHGeCkk/?mibextid=wwXIfr"
+      ]
+    },
+    {
+      home: { name: "Barcelona", logo: "https://crests.football-data.org/81.png" },
+      away: { name: "Real Betis", logo: "https://crests.football-data.org/90.png" },
+      links: [
+        "https://www.facebook.com/share/16Dk4WZuQT/?mibextid=wwXIfr",
+        "https://www.facebook.com/share/1ACaHGeCkk/?mibextid=wwXIfr"
+      ]
+    },
+    {
+      home: { name: "Sevilla", logo: "https://crests.football-data.org/559.png" },
+      away: { name: "Atletico Madrid", logo: "https://crests.football-data.org/78.png" },
+      links: [
+        "https://www.facebook.com/share/16Dk4WZuQT/?mibextid=wwXIfr",
+        "https://www.facebook.com/share/1ACaHGeCkk/?mibextid=wwXIfr"
+      ]
+    }
+  ];
+
+  const container = document.getElementById("match-container");
+
+  matches.forEach((match, index) => {
+    const card = document.createElement("div");
+    card.className = "match";
+
+    card.innerHTML = `
+      <div class="team">
+        <span>${match.home.name}</span>
+        <img src="${match.home.logo}" />
+      </div>
+      <div class="middle">
+        <button class="watch-btn" id="watch-${index}">Watch</button>
+        <div class="note">First click: Open Ad. Second click: Open Live Match</div>
+      </div>
+      <div class="team" style="justify-content: flex-end;">
+        <img src="${match.away.logo}" />
+        <span>${match.away.name}</span>
+      </div>
+    `;
+
+    container.appendChild(card);
+
+    const btn = document.getElementById(`watch-${index}`);
+    btn.addEventListener("click", () => {
+      const clicked = sessionStorage.getItem(`match-${index}`);
+      if (!clicked) {
+        sessionStorage.setItem(`match-${index}`, "clicked");
+        window.open(match.links[0], "_blank");
+      } else {
+        window.open(match.links[1], "_blank");
+      }
+    });
+  });
+
+  function createSnowflake() {
+    const flake = document.createElement("div");
+    flake.className = "snowflake";
+    flake.textContent = "❄️";
+    flake.style.left = Math.random() * window.innerWidth + "px";
+    flake.style.animationDuration = (2 + Math.random() * 3) + "s";
+    flake.style.opacity = Math.random();
+    document.body.appendChild(flake);
+    setTimeout(() => flake.remove(), 5000);
+  }
+  setInterval(createSnowflake, 200);
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+  }
+</script>
+
+</body>
+</html>
